@@ -9,7 +9,7 @@ dotenv.config();
 //The user will be checked and if present the isUser will be true else a new user will be created
 // @pravin Implimented Bcrypt password hashing model.
 const registerUser = async (req, res) => {
-    var { email, userName, password } = req.body;
+    var { email, userName, password, securityQuestion, securityAnswer } = req.body;
     console.log(email);
     try {
         const user = await Users.findOne({
@@ -42,9 +42,9 @@ const registerUser = async (req, res) => {
                             email: email,
                             userName: userName,
                             password: hash,
-                            events:0,
-                            securityQuestion: " ",
-                            securityAnswer: " ",
+                            events:"0",
+                            securityQuestion: securityQuestion,
+                            securityAnswer: securityAnswer,
                             profilePhoto: " ",
                             userDescription: " ",
                         })

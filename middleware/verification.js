@@ -46,7 +46,7 @@ const verification = async (req, res, next) => {
             if (token) {
                 if (authorization) {
                     const email = authorization.split(" ")[1];
-                    const user = await User.findOne({ email: email });
+                    const user = await User.findOne({ email: email});
                     if (user) {
                         jwt.verify(token, process.env.JWT_SECRET, (err, auth) => {
                             if (err) { 

@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     events:{
-        type:mongoose.Schema.Types.Number,
+        type:mongoose.Schema.Types.String,
     },
     password: {
         type: mongoose.Schema.Types.String,
