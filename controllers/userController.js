@@ -1,9 +1,8 @@
-const Users = require("../models/User");
+const User = require("../models/user");
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const User = require("../models/User");
 dotenv.config();
 
 //The user will be checked and if present the isUser will be true else a new user will be created
@@ -12,7 +11,7 @@ const registerUser = async (req, res) => {
     var { email, userName, password, securityQuestion, securityAnswer } = req.body;
     console.log(email);
     try {
-        const user = await Users.findOne({
+        const user = await User.findOne({
             email: email
         });
         if (user) {
@@ -22,7 +21,7 @@ const registerUser = async (req, res) => {
                     id: user.id,
                     userName: user.userName,
                     email: user.email,
-                    events:user.events,
+                    totalEvents: user.totalEvents,
                     securityQuestion: user.securityQuestion,
                     securityAnswer: user.securityAnswer,
                     profilePhoto: user.profilePhoto,
@@ -38,11 +37,11 @@ const registerUser = async (req, res) => {
                     if (err) {
                         res.status(500).json({ message: err.message });
                     } else {
-                        Users.create({
+                        User.create({
                             email: email,
                             userName: userName,
                             password: hash,
-                            events:"0",
+                            totalEvents: "0",
                             securityQuestion: securityQuestion,
                             securityAnswer: securityAnswer,
                             profilePhoto: " ",
@@ -110,12 +109,12 @@ const registerUser = async (req, res) => {
 const updateUser = async (req, res) => {
     const { email, password } = req.query;
     const requser = req.body
-    Users.findOne({ email: email })
+    User.findOne({ email: email })
         .then((user) => {
             if (user) {
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (result == true) {
-                        Users.findOneAndUpdate({
+                        User.findOneAndUpdate({
                             email: email
                         }, requser).then((user) => {
                             res.statusCode = 200;
@@ -124,7 +123,7 @@ const updateUser = async (req, res) => {
                     } else {
                         res.statusCode = 404;
                         res.setHeader('Content-Type', 'application/json');
-                        res.json({ message: "Wrong Password", error:err });
+                        res.json({ message: "Wrong Password", error: err });
                     }
                 })
             } else {
@@ -139,11 +138,11 @@ const updateUser = async (req, res) => {
 
 //The user will be checked 
 const checkUser = async (req, res) => {
-    const {authorization}= req.headers;
+    const { authorization } = req.headers;
     const email = authorization.split(" ")[1];
     console.log(email);
     try {
-        const user = await Users.findOne({ email: email });
+        const user = await User.findOne({ email: email });
         if (user) {
             res.status(200).json({
                 message: "User Exist",
@@ -167,7 +166,7 @@ const checkUser = async (req, res) => {
 // userlogin
 const login = async (req, res, next) => {
     const { email, password } = req.query;
-    Users.findOne({ email: email })
+    User.findOne({ email: email })
         .then((user) => {
             if (user) {
                 console.log({ pass: password, userpass: user.password });
@@ -188,7 +187,7 @@ const login = async (req, res, next) => {
                     } else {
                         res.statusCode = 404;
                         res.setHeader('Content-Type', 'application/json');
-                        res.json({ message: "Wrong Password", error:err });
+                        res.json({ message: "Wrong Password", error: err });
                     }
                 })
 
@@ -206,7 +205,7 @@ const login = async (req, res, next) => {
 // 
 const all = async (req, res, next) => {
 
-    Users.find({})
+    User.find({})
         .then((users) => {
             res.status(200).json({ users: users });
         })

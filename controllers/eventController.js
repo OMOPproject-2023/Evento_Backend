@@ -1,5 +1,5 @@
 const Event = require("../models/event");
-
+const User = require("../models/user");
 //The request body will contain the following key-value pair we will destructure it and will create the new event
 const createEvent = async (req, res) => {
     const {
@@ -113,16 +113,32 @@ const updateEvent = async (req, res) => {
 //After completion of the event user will end the event 
 const endEvent = async (req, res) => {
     const { _id } = req.query;
+    const { email } = req.query;
+    console.log(email);
     try {
         const endEvent = await Event.findByIdAndUpdate(
             _id, {
             $set: { eventStatus: 'completed' },
         }
         );
-        res.status(200).json({
-            message: "Event Finished",
-            endEvent
-        });
+        if (endEvent) {
+            const user = await User.findOne({ email: email });
+            var total = parseInt(user.totalEvents);
+            total++;
+            User.findOneAndUpdate(email, {
+                $set: { totalEvents: total.toString() }
+            }).then(() => {
+                res.status(200).json({
+                    message: "Event Finished",
+                    endEvent,
+                });
+            })
+        } else {
+            res.status(400).json({
+                message: "Event Not Found",
+            });
+        }
+
     } catch (e) {
         console.log(e);
         return res.status(500).send(e);
