@@ -4,8 +4,7 @@ const {
     createEvent,
     getEventById,
     getEvents,
-    getEventsByhostEmail,
-    updateEvent,
+    startEvent,
     endEvent,
     deleteEvent } = require("../controllers/eventController");
 
@@ -14,10 +13,9 @@ const router = require("express").Router();
 
 router.post('/event', createEvent)
 router.get('/event', getEventById)
-router.get('/event/status', getEvents)
-router.get('/event/host/status', getEventsByhostEmail)
+router.get('/event/type', getEvents)
 router.put('/event/end', endEvent)
-router.put('/event', updateEvent)
+router.put('/event', startEvent)
 router.delete('/event', deleteEvent)
 
 module.exports = (app) => {

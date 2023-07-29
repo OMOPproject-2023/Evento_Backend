@@ -3,7 +3,7 @@
 const router = require("express").Router();
 const { testController } = require('../controllers/testController');
 
-router.get('', testHome);
+router.get('/home', testHome);
 router.get('/events', testEvent);
 
 module.exports = (app) => {

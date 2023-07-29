@@ -1,4 +1,3 @@
-
 require("dotenv")
 const User = require("../models/user");
 const jwt = require("jsonwebtoken")
@@ -7,7 +6,10 @@ const verification = async (req, res, next) => {
     const { path } = req;
     const { token, api_key, authorization } = req.headers;
     //Check For Registration request [No Need of auuthorization and token]
-    if (path == "/evento/register") {
+    if(path == "/evento/home"){
+        next();
+    }
+    else if (path == "/evento/register") {
         //Check for api key
         if (api_key === process.env.API_KEY) {
             next();
@@ -16,7 +18,7 @@ const verification = async (req, res, next) => {
             res.status(403).send("Invalid api key");
         }
     } //Check For Login request [No need of token as user logging in]
-    else if (path == "/evento/login") {
+    else if (path == "/evento/login" || path=="/evento/password") {
         //Check for api key
         if (api_key === process.env.API_KEY) {
             if (authorization) {
@@ -46,7 +48,7 @@ const verification = async (req, res, next) => {
             if (token) {
                 if (authorization) {
                     const email = authorization.split(" ")[1];
-                    const user = await User.findOne({ email: email });
+                    const user = await User.findOne({ email: email});
                     if (user) {
                         jwt.verify(token, process.env.JWT_SECRET, (err, auth) => {
                             if (err) { 

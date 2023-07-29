@@ -19,8 +19,7 @@ const eventSchema = new mongoose.Schema({
         required: true,
     },
     isFree: {
-        type: Boolean,
-        default: true,
+        type: mongoose.Schema.Types.String,
         required: true
     },
     eventDateTime: {

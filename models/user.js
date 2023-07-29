@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.String,
         required: true,
     },
-    events:{
-        type:mongoose.Schema.Types.Number,
+    totalEvents:{
+        type:mongoose.Schema.Types.String,
     },
     password: {
         type: mongoose.Schema.Types.String,
